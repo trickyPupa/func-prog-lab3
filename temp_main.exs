@@ -1,0 +1,1 @@
+Interpolator.main(System.argv())
