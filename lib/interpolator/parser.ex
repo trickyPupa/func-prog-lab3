@@ -20,12 +20,10 @@ defmodule Interpolator.Parser do
   defp parse_do([], %Parser{} = args), do: args
 
   defp parse_do(["--algo" | [val | rest]], %Parser{} = args) do
-    new_args = args
-
     new_args =
       cond do
         val == Interpolator.LinearInterpolator.algo_name() ->
-          %Parser{args | algo: Interpolator.LinearInterpolator}
+          %Parser{args | algo: Interpolator.LinearInterpolator, number: 2}
 
         val == Interpolator.NewtonInterpolator.algo_name() ->
           %Parser{args | algo: Interpolator.NewtonInterpolator}
@@ -47,6 +45,10 @@ defmodule Interpolator.Parser do
     end
   end
 
+  defp parse_do(["--n" | [_ | rest]], %Parser{algo: Interpolator.LinearInterpolator} = args) do
+    parse_do(rest, args)
+  end
+
   defp parse_do(["--n" | [val | rest]], %Parser{} = args) do
     case Integer.parse(val) do
       {int, _} when int >= 1 ->
@@ -61,7 +63,6 @@ defmodule Interpolator.Parser do
     raise ArgumentError, message: "unknown argument: " <> param
   end
 
-  defp combo_algos do
-    ["newlin", "new-lin", "linnew", "lin-new", "newton-linear", "linear-newton"]
-  end
+  defp combo_algos,
+    do: ["newlin", "new-lin", "linnew", "lin-new", "newton-linear", "linear-newton"]
 end

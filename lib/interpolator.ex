@@ -1,4 +1,8 @@
 defmodule Interpolator do
+  defmodule Point do
+    defstruct [:x, :y]
+  end
+
   alias Interpolator.Parser
 
   def main(["--help" | _]) do
@@ -6,9 +10,15 @@ defmodule Interpolator do
   end
 
   def main(args) do
-    args
-    |> Parser.parse_args()
-    |> IO.inspect()
+    writer = Interpolator.Writer.start()
+
+    processor =
+      args
+      |> Parser.parse_args()
+      |> IO.inspect()
+      |> Processor.start(writer)
+
+    Reader.start(processor)
   end
 
   defp print_help do
