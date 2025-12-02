@@ -7,7 +7,7 @@ defmodule Interpolator.Parser do
 
   defstruct [:algo, :step, :number]
 
-  def parse_args(list = [_ | _]) do
+  def parse_args([_ | _] = list) do
     list
     |> parse_do(%Parser{})
   end

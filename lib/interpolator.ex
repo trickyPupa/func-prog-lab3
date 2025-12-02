@@ -10,15 +10,20 @@ defmodule Interpolator do
   end
 
   def main(args) do
-    writer = Interpolator.Writer.start()
+    writer = Interpolator.Writer.start(self())
 
     processor =
       args
       |> Parser.parse_args()
-      |> IO.inspect()
       |> Processor.start(writer)
 
-    Reader.start(processor)
+    Interpolator.Reader.start(processor)
+
+    receive do
+      {:end} ->
+        System.halt(0)
+    end
+
   end
 
   defp print_help do

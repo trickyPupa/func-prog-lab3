@@ -10,7 +10,7 @@ defmodule Interpolator.LinearInterpolator do
   end
 
   def build(%Window{
-        points: [%Interpolator.Point{x: x1, y: y1}, %Interpolator.Point{x: x2, y: y2} | _]
+        points: [%Point{x: x0, y: y0}, %Point{x: x1, y: y1} | _]
       }) do
     k = (y1 - y0) / (x1 - x0)
     b = y0 - k * x0

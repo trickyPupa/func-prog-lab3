@@ -8,8 +8,8 @@ defmodule Interpolator.NewtonInterpolator do
   end
 
   def build(points) do
-    xs = Enum.map(points, &elem(&1, 0))
-    ys = Enum.map(points, &elem(&1, 1))
+    xs = Enum.map(points, & &1.x)
+    ys = Enum.map(points, & &1.y)
 
     coeffs = divided_differences(xs, ys)
 
