@@ -1,7 +1,7 @@
 defmodule Window do
   defstruct [:points, :size]
 
-  def new(size) do
+  def new(%Interpolator.Parser{number: size}) do
     %Window{points: [], size: size}
   end
 

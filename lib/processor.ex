@@ -2,7 +2,7 @@ defmodule Processor do
   def start(%Interpolator.Parser{} = args, dest) do
     interpolator = args.algo
 
-    window = Window.new(args.number)
+    window = Window.new(args)
 
     spawn_link(fn -> loop(dest, interpolator, window, args) end)
   end

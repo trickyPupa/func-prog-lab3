@@ -17,23 +17,21 @@ defmodule Interpolator.Reader do
     |> Stream.map(fn
       %Interpolator.Point{} = p ->
         send(dest, {:point, p})
-        # Process.sleep(100)
         :next
 
       nil ->
         :next
 
       :eof ->
-        :ok
+        send(dest, {:end})
+        :stop
 
       _ ->
-        :error
+        send(dest, {:end})
+        :stop
     end)
     |> Enum.take_while(fn
-      {:ok} ->
-        false
-
-      {:error} ->
+      :stop ->
         false
 
       _ ->
