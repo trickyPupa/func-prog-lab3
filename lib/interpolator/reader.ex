@@ -11,7 +11,7 @@ defmodule Interpolator.Reader do
   end
 
   defp process(dest, stream) do
-    stream
+    _ = stream
     |> Stream.map(&read_line(&1))
     |> Stream.map(&read(&1))
     |> Stream.map(fn
@@ -34,7 +34,7 @@ defmodule Interpolator.Reader do
       :stop ->
         false
 
-      _ ->
+      :next ->
         true
     end)
 

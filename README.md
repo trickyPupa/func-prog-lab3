@@ -2,7 +2,23 @@
 
 [![CI](https://github.com/trickyPupa/func-prog-3/actions/workflows/main.yml/badge.svg)](https://github.com/trickyPupa/func-prog-lab3/actions/workflows/main.yml)
 
-## Лабор Тимофей Владимирович P3325
+**Лабор Тимофей Владимирович P3325**
+
+[![CI](https://github.com/trickyPupa/func-prog-lab3/actions/workflows/main.yml/badge.svg)](https://github.com/trickyPupa/func-prog-lab3/actions/workflows/main.yml)
+
+## Использование
+
+Все платформы:
+
+```bash
+mix run --no-halt main.exs --algo algo --step step [ --n n] [filename]
+```
+
+Windows:
+
+```powershell
+./run.bat
+```
 
 ## Требования
 
@@ -22,31 +38,71 @@
 
 Дополнительные возможности:
 
-- ввод из файла
+- ✅ ввод из файла
 
-## Структура
+## Ключевые элементы реализации
 
 Программа состоит из нескольких модулей:
 
 - ✅ Reader
+  - Чтение входных данных из стандартного ввода или из файла
+
 - ✅ Writer
+  - Печать результатов в стандартный вывод
+
 - ✅ Parser
-- ✅ Interpolator
+  - Парсит аргументы программы в специальную структуру
+
 - ✅ Processor
+  - Центр программы
+  - Получает на вход аргументы из Parser
+  - Получает готовые данные из Reader
+  - Высчитывает точки с помощью методов интерполяции
+  - Передает посчитанные данные Writer
+  - После получения сообщения о конце ввода завершает Writer и завершается сам
+
 - ✅ LinearInterpolator
+  - Линейная интерполяция отрезками
+
 - ✅ NewtonInterpolator
-- MixedInterpolator
+  - Интерполяция методом Ньютона
 
-## Ключевые элементы реализации
+- ✅ MixedInterpolator
+  - Интерполяция сразу двумя методами
+  - Внутри использует LinearInterpolator и NewtonInterpolator
 
-## Тесты и метрики
+- ✅ Interpolator
+  - Входная точка программы
+  - Принимает и парсит аргументы с помощью Parser
+  - Запускает Reader и Writer
+  - Запускает Processor
+  - После завершения всех процессов завершает vm
 
-### Unit-тесты
+## Пример работы программы
 
-### Integration-тесты
-
-### Property-based тесты
-
-### Тестовое покрытие
-
-## Выводы
+```bash
+mix run --no-halt main.exs --algo newton --step 0.4 --n 3
+< 1 1
+< 2 2
+< 3 3
+newton > 1.0000, 1.0000
+newton > 1.4000, 1.4000
+newton > 1.8000, 1.8000
+newton > 2.2000, 2.2000
+newton > 2.6000, 2.6000
+newton > 3.0000, 3.0000
+< 6 7
+newton > 2.0000, 2.0000
+newton > 2.4000, 2.3800
+newton > 2.8000, 2.7867
+newton > 3.2000, 3.2200
+newton > 3.6000, 3.6800
+newton > 4.0000, 4.1667
+newton > 4.4000, 4.6800
+newton > 4.8000, 5.2200
+newton > 5.2000, 5.7867
+newton > 5.6000, 6.3800
+newton > 6.0000, 7.0000
+< end
+---END---
+```

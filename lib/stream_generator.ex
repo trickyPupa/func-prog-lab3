@@ -12,6 +12,16 @@ defmodule StreamGenerator do
     |> gen_stream(rest, coords, args, algos)
   end
 
+  # для одного метода
+  def gen_stream(f, {x1, x2}, %Interpolator.Parser{step: gen_step} = args) do
+    map_func = get_map_func(f, args.algo.name())
+    take_while_func = get_take_while_func(x2)
+
+    Stream.iterate(x1, &(&1 + gen_step))
+    |> Stream.map(map_func)
+    |> Stream.take_while(take_while_func)
+  end
+
   defp gen_stream(
          current_stream,
          [f | rest],
@@ -36,16 +46,6 @@ defmodule StreamGenerator do
     |> Stream.flat_map(fn x -> x end)
   end
 
-  # для одного метода
-  def gen_stream(f, {x1, x2}, %Interpolator.Parser{step: gen_step} = args) do
-    map_func = get_map_func(f, args.algo.name())
-    take_while_func = get_take_while_func(x2)
-
-    Stream.iterate(x1, &(&1 + gen_step))
-    |> Stream.map(map_func)
-    |> Stream.take_while(take_while_func)
-  end
-
   defp get_map_func(f, label) do
     fn x -> %{point: %Interpolator.Point{x: x, y: f.(x)}, algo: label} end
   end
@@ -54,7 +54,7 @@ defmodule StreamGenerator do
     fn x -> x.point.x <= bound + 1.0e-12 end
   end
 
-  defp algos() do
+  defp algos do
     Enum.reverse(Interpolator.MixedInterpolator.algo_order())
   end
 end

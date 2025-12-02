@@ -11,7 +11,7 @@ defmodule Interpolator.MixedInterpolator do
     [Interpolator.LinearInterpolator.build(window), Interpolator.NewtonInterpolator.build(window)]
   end
 
-  def algo_order() do
+  def algo_order do
     ["linear", "newton"]
   end
 end

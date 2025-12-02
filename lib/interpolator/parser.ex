@@ -64,7 +64,7 @@ defmodule Interpolator.Parser do
 
   defp parse_do([param], %Parser{} = args) do
     # raise ArgumentError, message: "unknown argument: " <> param
-    %Parser{args | file: param}
+    parse_do([], %Parser{args | file: param})
   end
 
   defp combo_algos,
