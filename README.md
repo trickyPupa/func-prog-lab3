@@ -1,6 +1,4 @@
-# Лабораторная работа №2
-
-[![CI](https://github.com/trickyPupa/func-prog-3/actions/workflows/elixir.yml/badge.svg)](https://github.com/trickyPupa/func-prog-lab3/actions/workflows/elixir.yml)
+# Лабораторная работа №3
 
 **Лабор Тимофей Владимирович P3325**
 
