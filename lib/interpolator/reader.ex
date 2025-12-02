@@ -11,32 +11,33 @@ defmodule Interpolator.Reader do
   end
 
   defp process(dest, stream) do
-    _ = stream
-    |> Stream.map(&read_line(&1))
-    |> Stream.map(&read(&1))
-    |> Stream.map(fn
-      %Interpolator.Point{} = p ->
-        send(dest, {:point, p})
-        :next
+    _ =
+      stream
+      |> Stream.map(&read_line(&1))
+      |> Stream.map(&read(&1))
+      |> Stream.map(fn
+        %Interpolator.Point{} = p ->
+          send(dest, {:point, p})
+          :next
 
-      nil ->
-        :next
+        nil ->
+          :next
 
-      :eof ->
-        send(dest, {:end})
-        :stop
+        :eof ->
+          send(dest, {:end})
+          :stop
 
-      _ ->
-        send(dest, {:end})
-        :stop
-    end)
-    |> Enum.take_while(fn
-      :stop ->
-        false
+        _ ->
+          send(dest, {:end})
+          :stop
+      end)
+      |> Enum.take_while(fn
+        :stop ->
+          false
 
-      :next ->
-        true
-    end)
+        :next ->
+          true
+      end)
 
     send(dest, {:end})
   end
