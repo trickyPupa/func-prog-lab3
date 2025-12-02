@@ -5,7 +5,7 @@ defmodule Interpolator.Parser do
 
   alias Interpolator.Parser
 
-  defstruct [:algo, :step, :number]
+  defstruct [:algo, :step, :number, file: nil]
 
   def parse_args([_ | _] = list) do
     list
@@ -62,8 +62,9 @@ defmodule Interpolator.Parser do
     end
   end
 
-  defp parse_do([param | _], %Parser{}) do
-    raise ArgumentError, message: "unknown argument: " <> param
+  defp parse_do([param], %Parser{} = args) do
+    # raise ArgumentError, message: "unknown argument: " <> param
+    %Parser{args | file: param}
   end
 
   defp combo_algos,
@@ -77,6 +78,9 @@ defmodule Interpolator.Parser do
       args.algo in [Interpolator.NewtonInterpolator, Interpolator.NewtonInterpolator] &&
           !args.number ->
         raise ArgumentError, message: "with newton method --number argument must be listed"
+
+      args.file && !File.exists?(args.file) ->
+        raise ArgumentError, message: "no such file \"" <> args.file <> "\""
 
       true ->
         :ok

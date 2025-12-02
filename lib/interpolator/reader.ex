@@ -1,30 +1,50 @@
 defmodule Interpolator.Reader do
-  def start(processor) do
-    spawn_link(fn -> loop(processor) end)
+  def start(args, processor) do
+    stream =
+      if args.file do
+        File.stream!(args.file, :line, encoding: :utf8)
+      else
+        IO.stream()
+      end
+
+    spawn_link(fn -> process(processor, stream) end)
   end
 
-  defp loop(dest) do
-    case read() do
+  defp process(dest, stream) do
+    stream
+    |> Stream.map(&read_line(&1))
+    |> Stream.map(&read(&1))
+    |> Stream.map(fn
       %Interpolator.Point{} = p ->
         send(dest, {:point, p})
-        Process.sleep(100)
-        loop(dest)
+        # Process.sleep(100)
+        :next
 
       nil ->
-        loop(dest)
+        :next
 
       :eof ->
-        send(dest, {:end})
         :ok
 
       _ ->
-        send(dest, {:end})
         :error
-    end
+    end)
+    |> Enum.take_while(fn
+      {:ok} ->
+        false
+
+      {:error} ->
+        false
+
+      _ ->
+        true
+    end)
+
+    send(dest, {:end})
   end
 
-  defp read() do
-    case read_line() do
+  defp read(x) do
+    case x do
       :eof ->
         :eof
 
@@ -37,8 +57,8 @@ defmodule Interpolator.Reader do
     end
   end
 
-  defp read_line do
-    case IO.gets("point < ") do
+  defp read_line(x) do
+    case x do
       :eof ->
         :eof
 

@@ -12,12 +12,10 @@ defmodule Interpolator do
   def main(args) do
     writer = Interpolator.Writer.start(self())
 
-    processor =
-      args
-      |> Parser.parse_args()
-      |> Processor.start(writer)
+    args = Parser.parse_args(args)
+    processor = Processor.start(args, writer)
 
-    Interpolator.Reader.start(processor)
+    Interpolator.Reader.start(args, processor)
 
     receive do
       {:end} ->
