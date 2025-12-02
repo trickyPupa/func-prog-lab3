@@ -1,7 +1,7 @@
 defmodule Interpolator.LinearInterpolator do
   alias Interpolator.Point
 
-  def algo_name do
+  def name do
     "linear"
   end
 

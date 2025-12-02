@@ -5,8 +5,8 @@ defmodule Interpolator.Writer do
 
   def loop(main_proc) do
     receive do
-      {:stream, interpolator, stream} ->
-        print_stream(stream, interpolator)
+      {:stream, stream} ->
+        print_stream(stream)
         loop(main_proc)
 
       {:end} ->
@@ -21,12 +21,12 @@ defmodule Interpolator.Writer do
     :ok
   end
 
-  defp print_stream(stream, label) do
+  defp print_stream(stream) do
     stream
-    |> Enum.each(
-      &IO.puts(
-        "#{label} > #{:erlang.float_to_binary(&1.x, decimals: 2)}, #{:erlang.float_to_binary(&1.y, decimals: 2)}"
-      )
-    )
+    |> Enum.each(fn x -> IO.puts("#{x.algo} > #{format(x.point.x)}, #{format(x.point.y)}") end)
+  end
+
+  defp format(x) do
+    :erlang.float_to_binary(x, decimals: 4)
   end
 end

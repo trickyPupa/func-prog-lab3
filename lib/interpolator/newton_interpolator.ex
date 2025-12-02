@@ -1,5 +1,5 @@
 defmodule Interpolator.NewtonInterpolator do
-  def algo_name do
+  def name do
     "newton"
   end
 
@@ -7,7 +7,7 @@ defmodule Interpolator.NewtonInterpolator do
     IO.puts("newton module")
   end
 
-  def build(points) do
+  def build(%Window{points: points}) do
     xs = Enum.map(points, & &1.x)
     ys = Enum.map(points, & &1.y)
 

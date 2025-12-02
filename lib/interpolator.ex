@@ -23,7 +23,6 @@ defmodule Interpolator do
       {:end} ->
         System.halt(0)
     end
-
   end
 
   defp print_help do

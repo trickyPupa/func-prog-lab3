@@ -38,7 +38,7 @@ defmodule Interpolator.Reader do
   end
 
   defp read_line do
-    case IO.gets("point > ") do
+    case IO.gets("point < ") do
       :eof ->
         :eof
 

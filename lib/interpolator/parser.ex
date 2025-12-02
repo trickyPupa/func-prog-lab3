@@ -17,19 +17,22 @@ defmodule Interpolator.Parser do
     |> parse_do(%Parser{})
   end
 
-  defp parse_do([], %Parser{} = args), do: args
+  defp parse_do([], %Parser{} = args) do
+    validate(args)
+    args
+  end
 
   defp parse_do(["--algo" | [val | rest]], %Parser{} = args) do
     new_args =
       cond do
-        val == Interpolator.LinearInterpolator.algo_name() ->
+        val == Interpolator.LinearInterpolator.name() ->
           %Parser{args | algo: Interpolator.LinearInterpolator, number: 2}
 
-        val == Interpolator.NewtonInterpolator.algo_name() ->
+        val == Interpolator.NewtonInterpolator.name() ->
           %Parser{args | algo: Interpolator.NewtonInterpolator}
 
         Enum.any?(combo_algos(), fn x -> x == val end) ->
-          %Parser{args | algo: Interpolator.NewtonInterpolator}
+          %Parser{args | algo: Interpolator.MixedInterpolator}
 
         true ->
           raise ArgumentError, message: "invalid algo"
@@ -65,4 +68,18 @@ defmodule Interpolator.Parser do
 
   defp combo_algos,
     do: ["newlin", "new-lin", "linnew", "lin-new", "newton-linear", "linear-newton"]
+
+  defp validate(%Parser{} = args) do
+    cond do
+      !args.algo || !args.step ->
+        raise ArgumentError, message: "--algo and --step arguments must be listed"
+
+      args.algo in [Interpolator.NewtonInterpolator, Interpolator.NewtonInterpolator] &&
+          !args.number ->
+        raise ArgumentError, message: "with newton method --number argument must be listed"
+
+      true ->
+        :ok
+    end
+  end
 end
